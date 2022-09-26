@@ -259,15 +259,13 @@ function compareText()
 					pos1++;
 					pos2++;
 				} ;
-				if ( pos1 < code1len)
-				if ( pos2 < code2len)
-				if (c1blank() && c2blank()) ;
-				else
-				if ( c_1 ()!=  c_2() )
+				while ( pos1 < code1len &&  c1blank() ) 
 				{
-					//scroll();
-					resultspan.innerText ="Not OK";
-					return ;
+					pos1++
+				}
+				while ( pos2 < code2len && c2blank()) 
+				{
+					pos2++
 				}
 			} else
 			if (c1 ()!=  c2())
