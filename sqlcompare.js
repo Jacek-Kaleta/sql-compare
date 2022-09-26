@@ -1,9 +1,11 @@
-var codeEditor1 = document.getElementById('codeEditor1');
-var lineCounter1 = document.getElementById('lineCounter1');
-var codeEditor2 = document.getElementById('codeEditor2');
-var lineCounter2 = document.getElementById('lineCounter2');
+const codeEditor1 = document.getElementById('codeEditor1');
+const lineCounter1 = document.getElementById('lineCounter1');
+const codeEditor2 = document.getElementById('codeEditor2');
+const lineCounter2 = document.getElementById('lineCounter2');
+const resultspan = document.getElementById('result');
 
 class TextEditor {
+
 	constructor(codeEditor, lineCounter) {
 		this.codeEditor = codeEditor;
 		this.lineCounter = lineCounter;
@@ -50,8 +52,57 @@ let te1 = new TextEditor(codeEditor1, lineCounter1);
 let te2 = new TextEditor(codeEditor2, lineCounter2);
 let scrollsw = 0;
 
+function getLineNumberAndColumnIndex(textarea)
+{
+	let textLines = textarea.value.substr(0, textarea.selectionStart).split("\n");
+	let currentLineNumber = textLines.length;
+	let currentColumnIndex = textLines[textLines.length-1].length;
+	return '(L:'+ currentLineNumber+', C:'+(currentColumnIndex+1)+')' ;
+}
+
+function setSelectionRange(textarea, selectionStart, selectionEnd) 
+{
+	const fullText = textarea.value;
+	textarea.value = fullText.substring(0, selectionEnd);
+	const scrollHeight = textarea.scrollHeight
+	textarea.value = fullText;
+	let scrollTop = scrollHeight;
+	const textareaHeight = textarea.clientHeight;
+	if (scrollTop > textareaHeight)
+	{
+		scrollTop -= textareaHeight / 2;
+	} else
+	{
+		scrollTop = 0;
+	}
+	textarea.scrollTop = scrollTop;
+	textarea.setSelectionRange(selectionStart, selectionEnd);
+}
+
 function compareText()
 {
+	let pos1=0;
+	let pos2=0;
+	
+	function scroll(code1, code2)
+	{
+		if (scrollsw ==0)
+		{
+			setSelectionRange(code1, pos1, pos1+1);
+			setSelectionRange(code2, pos2, pos2+1);
+			code1.focus();
+			scrollsw =1;
+		}
+		else
+		{
+			setSelectionRange(code2, pos2, pos2+1);
+			setSelectionRange(code1, pos1, pos1+1);
+			code2.focus();
+			scrollsw =0;
+		}
+		resultspan.innerText = resultspan.innerText+', A: '+getLineNumberAndColumnIndex(code1)+', B: '+getLineNumberAndColumnIndex(code2);
+	}
+	
 	function sqlCompare(code1, code2)
 	{
 		function scrollTo(textarea, position) {
@@ -66,55 +117,16 @@ function compareText()
 			}
 		}
 
-		let pos1=0;
-		let pos2=0;
 		let code1len = code1.value.length ;
 		let code2len = code2.value.length ;
 		let v1 = code1.value ;
 		let v2 = code2.value ;
 
-		function setSelectionRange(textarea, selectionStart, selectionEnd) 
-		{
-			const fullText = textarea.value;
-			textarea.value = fullText.substring(0, selectionEnd);
-			const scrollHeight = textarea.scrollHeight
-			textarea.value = fullText;
-			let scrollTop = scrollHeight;
-			const textareaHeight = textarea.clientHeight;
-			if (scrollTop > textareaHeight)
-			{
-				scrollTop -= textareaHeight / 2;
-			} else
-			{
-				scrollTop = 0;
-			}
-			textarea.scrollTop = scrollTop;
-			textarea.setSelectionRange(selectionStart, selectionEnd);
-		}
-
-		function scroll()
-		{
-			if (scrollsw ==0)
-			{
-				setSelectionRange(code1, pos1, pos1+1);
-				setSelectionRange(code2, pos2, pos2+1);
-				code1.focus();
-				scrollsw =1;
-			}
-			else
-			{
-				setSelectionRange(code2, pos2, pos2+1);
-				setSelectionRange(code1, pos1, pos1+1);
-				code2.focus();
-				scrollsw =0;
-			}
-		}
-
 		function c1()
 		{
 			return v1.charAt(pos1).toLowerCase();
 		}
-		
+
 		function c_1()
 		{
 			return v1.charAt(pos1);
@@ -172,16 +184,21 @@ function compareText()
 			return false;
 		}
 
+		resultspan.innerText ="OK";
 		while (1)
 		{
 			if (pos1 >= code1len) 
 			{
-				scroll();
+				if (pos2 < code2len)
+					resultspan.innerText ="Not OK";
+				//scroll();
 				return ;
 			}
 			if (pos2 >= code2len) 
 			{
-				scroll();
+				if (pos1 < code1len)
+					resultspan.innerText ="Not OK";
+				//scroll();
 				return ;
 			}
 
@@ -230,7 +247,6 @@ function compareText()
 			else
 			if (c1 () == '\'' && c2 () == '\'')
 			{
-				console.log('Tu');
 				pos1++;
 				pos2++;
 				while (pos1 < code1len && pos2 < code2len && c_1() == c_2() && c_1() != '\'')
@@ -249,7 +265,8 @@ function compareText()
 				else
 				if ( c_1 ()!=  c_2() )
 				{
-					scroll();
+					//scroll();
+					resultspan.innerText ="Not OK";
 					return ;
 				}
 			} else
@@ -259,7 +276,8 @@ function compareText()
 				if ( pos2 < code2len)
 				if ( c1 ()!=  c2() )
 				{
-					scroll();
+					//scroll();
+					resultspan.innerText ="Not OK";
 					return ;
 				}
 			} else
@@ -271,5 +289,5 @@ function compareText()
 	}
 
 	sqlCompare(codeEditor1, codeEditor2);
-	scroll();
+	scroll(codeEditor1, codeEditor2);
 }
