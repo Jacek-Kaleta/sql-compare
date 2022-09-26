@@ -7,24 +7,22 @@
 		<meta http-equiv='Content-Language' content='en' />
 		<link rel="stylesheet" href="sqlcompare.css">
 		<title>SQL Comapre</title>
-  		<noscript>You need to enable JavaScript to run this app.</noscript>
+		<noscript>You need to enable JavaScript to run this app.</noscript>
 	</head>
 	<body>
-		<h2><button onclick="compareText();">Compare SQL </button> <span id="result"></span></h2>
+		<h2><button onclick="compareText();">Compare SQL </button> 
+			<span id="result"><a href="sqlcompare.zip">download sqlcompare.zip for local usage</a></span>
+		</h2>
 		<p>
-			SQL Code [A]
+			SQL Code [A] <br/><br/>
 			<textarea class="lineCounter" id='lineCounter1' wrap='off' readonly>1.</textarea>
 			<textarea class="codeEditor"  id='codeEditor1' wrap='off'></textarea>
 		</p>
 		<p>
-			SQL Code [B]
+			SQL Code [B] <br/><br/>
 			<textarea class="lineCounter" id='lineCounter2' wrap='off' readonly>1.</textarea>
 			<textarea class="codeEditor" id='codeEditor2' wrap='off'></textarea>
 		</p>
-		<br/>
-		<a href="sqlcompare.zip">download sqlcompare.zip for local usage</a>
-		<br/>
 		<script src="sqlcompare.js"></script>
 	</body>
-	
 </html>

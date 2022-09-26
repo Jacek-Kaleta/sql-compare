@@ -100,7 +100,7 @@ function compareText()
 			code2.focus();
 			scrollsw =0;
 		}
-		resultspan.innerText = resultspan.innerText+', A: '+getLineNumberAndColumnIndex(code1)+', B: '+getLineNumberAndColumnIndex(code2);
+		resultspan.innerHTML = resultspan.innerHTML+', A: '+getLineNumberAndColumnIndex(code1)+', B: '+getLineNumberAndColumnIndex(code2);
 	}
 	
 	function sqlCompare(code1, code2)
