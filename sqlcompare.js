@@ -231,6 +231,7 @@ function compareText()
 		{
 			if (pos1 >= code1len) 
 			{
+				skipblank2();
 				if (pos2 < code2len)
 					resultspan.innerText ="Not OK";
 				//scroll();
@@ -238,6 +239,7 @@ function compareText()
 			}
 			if (pos2 >= code2len) 
 			{
+				skipblank1();
 				if (pos1 < code1len)
 					resultspan.innerText ="Not OK";
 				//scroll();
