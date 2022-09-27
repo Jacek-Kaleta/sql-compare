@@ -160,24 +160,66 @@ function compareText()
 			return false;
 		}
 
+		function skipblank1()
+		{
+			while (true)
+			{
+				while (pos1< code1len && c1blank()) pos1++;
+				if (!checkcomment1()) return ;
+			}
+		}
+		
+		function skipblank2()
+		{
+			while (true)
+			{
+				while (pos2< code2len && c2blank()) pos2++;
+				if (!checkcomment2()) return ;
+			}
+		}
+
+		function checkcomment1()
+		{
+			if (pos1 < code1len-1 && v1.substr(pos1,2)=='--')
+			{
+				pos1++;
+				pos1++;
+				while (pos1 < code1len && v1.charAt(pos1)!='\r' && v1.charAt(pos1)!='\n') pos1++;
+				while (pos1 < code1len && c1blank()) pos1++;
+				return true ;
+			} else return false;
+		}
+		
+		function checkcomment2()
+		{
+			if (pos2 < code2len-1 && v2.substr(pos2,2)=='--')
+			{
+				pos2++;
+				pos2++;
+				while (pos2 < code2len && v2.charAt(pos2)!='\r' && v2.charAt(pos2)!='\n') pos2++;
+				while (pos2 < code2len && c2blank()) pos2++;
+				return true ;
+			} else return false;
+		}
+
 		function checkchar(c)
 		{
 			if (c1() == c  && c2()==c)
 			{
 				pos1++;
 				pos2++;
-				while (pos1< code1len && c1blank()) pos1++;
-				while (pos2< code2len && c2blank()) pos2++;
+				skipblank1();
+				skipblank2();
 				return true;
 			} else
 			if (c1() == c  && c2blank())
 			{
-				while (pos2< code2len && c2blank()) pos2++;
+				skipblank2();
 				return true;
 			} else
 			if (c2() == c && c1blank())
 			{
-				while (pos1< code1len && c1blank()) pos1++;
+				skipblank1();
 				return true;
 			} 
 			else
