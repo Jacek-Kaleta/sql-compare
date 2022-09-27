@@ -285,8 +285,8 @@ function compareText()
 			if (checkchar('|'));else
 			if (c1blank() && c2blank())
 			{
-				while (pos1< code1len && c1blank()) pos1++;
-				while (pos2< code2len && c2blank()) pos2++;
+				skipblank1();
+				skipblank2();
 			}
 			else
 			if (c1 () == '\'' && c2 () == '\'')
